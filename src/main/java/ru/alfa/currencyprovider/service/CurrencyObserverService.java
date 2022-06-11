@@ -19,15 +19,16 @@ import java.time.temporal.ChronoField;
 @Service
 @Slf4j
 public class CurrencyObserverService {
+
+    private final RestTemplate restTemplate;
+    private final ExchangeRateProvider exchangeRateProvider;
+    private final GifProvider gifProvider;
+
     public CurrencyObserverService(RestTemplate restTemplate, ExchangeRateProvider exchangeRateProvider, GifProvider gifProvider) {
         this.restTemplate = restTemplate;
         this.exchangeRateProvider = exchangeRateProvider;
         this.gifProvider = gifProvider;
     }
-
-    private final RestTemplate restTemplate;
-    private final ExchangeRateProvider exchangeRateProvider;
-    private final GifProvider gifProvider;
 
     @Value("${ru.alfa.currencyprovider.exchange.token}")
     private String exchangeToken;
