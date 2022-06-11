@@ -9,7 +9,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "GIFs", description = "ДТО гифок")
 public class GifDTO {
 
     private List<Gif> data;
