@@ -10,10 +10,11 @@ import ru.alfa.currencyprovider.client.exchangerate.ExchangeRateProvider;
 import ru.alfa.currencyprovider.client.gif.GifProvider;
 import ru.alfa.currencyprovider.dto.CurrencyDTO;
 import ru.alfa.currencyprovider.dto.GifDTO;
-import ru.alfa.currencyprovider.exception.BadRequestException;
 
 import java.sql.Date;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.ChronoField;
 
 @Service
 @Slf4j
@@ -53,9 +54,8 @@ public class CurrencyObserverService {
      *
      * @param ticker Тикер сравниваемой валюты
      * @return GIF (rich или broke)
-     * @throws BadRequestException ошибка при невалидности входных данных
      */
-    public byte[] getCurrencyCourse(String ticker) throws BadRequestException {
+    public byte[] getCurrencyCourse(String ticker) {
 
         //Получаем последний курс валют
         CurrencyDTO latestRate = getCurrencyResponse(false);
@@ -74,13 +74,15 @@ public class CurrencyObserverService {
         }
         GifDTO gifDTO;
 
+        log.info(latestValue + " " + historicalValue);
+
         // Сравниваем исторический и текущий курсы по отношению к доллару и если исторический больше, то отдаем broke Gif, иначе rich Gif
         if (latestValue > historicalValue) {
             gifDTO = getConditionalGIF(rich);
         } else if (historicalValue > latestValue) {
             gifDTO = getConditionalGIF(broke);
         } else {
-            throw new BadRequestException("Невалидные данные, полученные ");
+            throw new RuntimeException("Невалидные данные, полученные");
         }
         int randomInt = (int) (Math.random() * 19);
         String url = gifDTO.getData().get(randomInt).getImages().getDownsized().getUrl();
@@ -89,12 +91,14 @@ public class CurrencyObserverService {
     }
 
     private CurrencyDTO getCurrencyResponse(boolean isHistorical) {
-        LocalDate date = LocalDate.now().minusDays(1);
+        LocalDate date = getValidityDate();
         ResponseEntity<CurrencyDTO> response;
         if (isHistorical) {
             response = exchangeRateProvider.getHistoricalRate(Date.valueOf(date), exchangeToken, currency);
+            log.info("into historical IF" + " " + response.getBody());
         } else {
             response = exchangeRateProvider.getLatestRate(exchangeToken, currency);
+            log.info("into latest if " + response.getBody());
         }
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new HttpServerErrorException(response.getStatusCode(), "Ошибка при обращении к сервису курса валют");
@@ -113,6 +117,17 @@ public class CurrencyObserverService {
             GifDTO gifDTO = response.getBody();
             assert gifDTO != null;
             return gifDTO;
+        }
+    }
+
+    private LocalDate getValidityDate() {
+        DayOfWeek day = DayOfWeek.of(LocalDate.now().get(ChronoField.DAY_OF_WEEK));
+        if (day == DayOfWeek.SATURDAY) {
+            return LocalDate.now().minusDays(2);
+        } else if (day == DayOfWeek.SUNDAY) {
+            return LocalDate.now().minusDays(3);
+        } else {
+            return LocalDate.now().minusDays(1);
         }
     }
 }

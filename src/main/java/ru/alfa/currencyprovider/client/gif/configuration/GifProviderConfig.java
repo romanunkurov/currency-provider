@@ -12,11 +12,10 @@ public class GifProviderConfig {
 
     @Value("${ru.alfa.currencyprovider.connectTimeout}")
     private long connectTimeout;
-    @Value("${ru.alfa.currencyprovider.readTimeout")
+    @Value("${ru.alfa.currencyprovider.readTimeout}")
     private long readTimeout;
     @Value("${ru.alfa.currencyprovider.followRedirects}")
     private Boolean followRedirects;
-    @Value("${ru.alfa.currencyprovider.login}")
 
     @Bean
     public Feign.Builder fileFeignBuilder() {

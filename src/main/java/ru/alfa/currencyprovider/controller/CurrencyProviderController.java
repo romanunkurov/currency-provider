@@ -18,7 +18,7 @@ public class CurrencyProviderController {
 
     private final CurrencyObserverService service;
 
-    @GetMapping("/toUSD/{ticker}")
+    @GetMapping(value = "/toUSD/{ticker}")
     public ResponseEntity<byte[]> compareToUSD(@PathVariable String ticker) throws BadRequestException {
 
         return ResponseEntity.ok().body(service.getCurrencyCourse(ticker));

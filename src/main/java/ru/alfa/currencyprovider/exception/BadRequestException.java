@@ -1,18 +1,14 @@
 package ru.alfa.currencyprovider.exception;
 
-import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpResponseException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.client.HttpServerErrorException;
 
-public class BadRequestException extends HttpResponseException {
+public class BadRequestException extends HttpServerErrorException {
 
     private static final long serialVersionUID = 2959363356183042450L;
 
-    public BadRequestException(int statusCode, String reasonPhrase) {
-        super(statusCode, reasonPhrase);
-    }
-
     public BadRequestException(String reasonPhrase) {
-        super(HttpStatus.SC_BAD_REQUEST, reasonPhrase);
+        super(HttpStatus.BAD_REQUEST, reasonPhrase);
     }
 }
 
