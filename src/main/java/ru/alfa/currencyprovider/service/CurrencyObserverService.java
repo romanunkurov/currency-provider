@@ -10,7 +10,6 @@ import ru.alfa.currencyprovider.client.exchangerate.ExchangeRateProvider;
 import ru.alfa.currencyprovider.client.gif.GifProvider;
 import ru.alfa.currencyprovider.dto.CurrencyDTO;
 import ru.alfa.currencyprovider.dto.GifDTO;
-
 import java.sql.Date;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -73,17 +72,15 @@ public class CurrencyObserverService {
                 && historicalValue.isNaN()) {
             throw new ArithmeticException();
         }
-        GifDTO gifDTO;
-
-        log.info(latestValue + " " + historicalValue);
 
         // Сравниваем исторический и текущий курсы по отношению к доллару и если исторический больше, то отдаем broke Gif, иначе rich Gif
+        GifDTO gifDTO;
         if (latestValue > historicalValue) {
             gifDTO = getConditionalGIF(rich);
         } else if (historicalValue > latestValue) {
             gifDTO = getConditionalGIF(broke);
         } else {
-            throw new RuntimeException("Невалидные данные, полученные");
+            throw new RuntimeException("Невалидные данные, полученные от GIF провайдера");
         }
         int randomInt = (int) (Math.random() * 19);
         String url = gifDTO.getData().get(randomInt).getImages().getDownsized().getUrl();
@@ -96,10 +93,8 @@ public class CurrencyObserverService {
         ResponseEntity<CurrencyDTO> response;
         if (isHistorical) {
             response = exchangeRateProvider.getHistoricalRate(Date.valueOf(date), exchangeToken, currency);
-            log.info("into historical IF" + " " + response.getBody());
         } else {
             response = exchangeRateProvider.getLatestRate(exchangeToken, currency);
-            log.info("into latest if " + response.getBody());
         }
         if (!response.getStatusCode().is2xxSuccessful()) {
             throw new HttpServerErrorException(response.getStatusCode(), "Ошибка при обращении к сервису курса валют");
@@ -121,6 +116,7 @@ public class CurrencyObserverService {
         }
     }
 
+    // Валидатор рабочих дней недели биржи
     private LocalDate getValidityDate() {
         DayOfWeek day = DayOfWeek.of(LocalDate.now().get(ChronoField.DAY_OF_WEEK));
         if (day == DayOfWeek.SATURDAY) {

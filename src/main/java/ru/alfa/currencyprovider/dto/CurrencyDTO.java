@@ -1,7 +1,6 @@
 package ru.alfa.currencyprovider.dto;
 
 import lombok.Data;
-
 import java.util.Date;
 import java.util.Map;
 

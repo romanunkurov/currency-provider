@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.alfa.currencyprovider.client.exchangerate.configuration.ExchangeRateProviderConfig;
 import ru.alfa.currencyprovider.client.exchangerate.fallback.ExchangeRateFallbackFactory;
 import ru.alfa.currencyprovider.dto.CurrencyDTO;
-
 import java.util.Date;
 
 @FeignClient(

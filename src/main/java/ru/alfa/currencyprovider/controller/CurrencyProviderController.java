@@ -9,13 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.alfa.currencyprovider.exception.BadRequestException;
 import ru.alfa.currencyprovider.service.CurrencyObserverService;
-
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/v1/internal/insurance")
+@RequestMapping("/v1/currency/provider")
 @AllArgsConstructor
 public class CurrencyProviderController {
 
