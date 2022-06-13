@@ -4,8 +4,8 @@ It's testing project for Alfa job vacancy Junior Java Developer
 Описание:
 Сервис, к которому можно обратиться за курсом фиатной валюты по отношению к американскому доллару, в ответе отображается случайная GIF:
 Если вводимый курс по отношению к USD за сегодня изменился, то сервис отдает случайную GIF ->
-* вырос по отношеню к USD - https://giphy.com/search/rich
-* упал по отношению к USD - https://giphy.com/search/broke
+* вырос - https://giphy.com/search/rich
+* упал  - https://giphy.com/search/broke
 
 ** Если сервис используется в выходное время, то берется последнее пятничное обновление**
 
